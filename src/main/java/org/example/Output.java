@@ -14,6 +14,7 @@ public class Output {
     private boolean a = false;
 
     private boolean flagInt = false, flagFloat = false, flagString = false;
+    boolean IntIsCreated = false,  FloatIsCreated = false, StringIsCreated = false;
 
     private int countInt = 0, countFloat = 0, countString = 0;
     private long sumInt;
@@ -26,41 +27,57 @@ public class Output {
 
     private ArrayList<FileReader> files = new ArrayList<>();
 
+    private ArrayList<Long>  integers = new ArrayList<>();
+    private ArrayList<Float> floats = new ArrayList<>();
+    private ArrayList<String> strings = new ArrayList<>();
+
     private String path, name = "";
+
+
+    private BufferedReader brString = null, brFloat = null, brInt = null;
 
     public void outputF() {
         metodF();
-        System.out.println("Статистика файла " + fullPath + "integers.txt");
-        System.out.println("Кол-во элементов: " + countInt);
-        System.out.println("Сумма элементов: " + sumInt);
-        System.out.println("Среднее значение: " + sumInt / countInt);
-        System.out.println("Максимальное значение: " + maxInt);
-        System.out.println("Минимальное значение: " + minInt + '\n');
-
-        System.out.println("Статистика файла " + fullPath + "floats.txt");
-        System.out.println("Кол-во элементов: " + countFloat);
-        System.out.println("Сумма элементов: " + sumFloat);
-        System.out.println("Среднее значение: " + sumFloat / countFloat);
-        System.out.println("Максимальное значение: " + maxFloat);
-        System.out.println("Минимальное значение: " + minFloat + '\n');
-
-        System.out.println("Статистика файла " + fullPath + "strings.txt");
-        System.out.println("Кол-во элементов: " + countString);
-        System.out.println("Размер самой короткой строки: " + minString);
-        System.out.println("Размер самой длинной строки: " + maxString);
-
+        if (isIntIsCreated()) {
+            System.out.println("Статистика файла " + fullPath + "integers.txt");
+            System.out.println("Кол-во элементов: " + countInt);
+            System.out.println("Сумма элементов: " + sumInt);
+            System.out.println("Среднее значение: " + sumInt / countInt);
+            System.out.println("Максимальное значение: " + maxInt);
+            System.out.println("Минимальное значение: " + minInt + '\n');
+        }
+        if (isFloatIsCreated()) {
+            System.out.println("Статистика файла " + fullPath + "floats.txt");
+            System.out.println("Кол-во элементов: " + countFloat);
+            System.out.println("Сумма элементов: " + sumFloat);
+            System.out.println("Среднее значение: " + sumFloat / countFloat);
+            System.out.println("Максимальное значение: " + maxFloat);
+            System.out.println("Минимальное значение: " + minFloat + '\n');
+        }
+        if (isStringIsCreated()) {
+            System.out.println("Статистика файла " + fullPath + "strings.txt");
+            System.out.println("Кол-во элементов: " + countString);
+            System.out.println("Размер самой короткой строки: " + minString);
+            System.out.println("Размер самой длинной строки: " + maxString);
+        }
     }
 
     public void outputS() {
         metodS();
-        System.out.println("Статистика файла " + fullPath + "integers.txt");
-        System.out.println("Кол-во элементов: " + countInt);
+        if (isIntIsCreated()) {
+            System.out.println("Статистика файла " + fullPath + "integers.txt");
+            System.out.println("Кол-во элементов: " + countInt);
+        }
 
-        System.out.println("Статистика файла " + fullPath + "floats.txt");
-        System.out.println("Кол-во элементов: " + countFloat);
+        if (isFloatIsCreated()) {
+            System.out.println("Статистика файла " + fullPath + "floats.txt");
+            System.out.println("Кол-во элементов: " + countFloat);
+        }
 
-        System.out.println("Статистика файла " + fullPath + "strings.txt");
-        System.out.println("Кол-во элементов: " + countString);
+        if (isStringIsCreated()) {
+            System.out.println("Статистика файла " + fullPath + "strings.txt");
+            System.out.println("Кол-во элементов: " + countString);
+        }
     }
 
     public void metodS() {
@@ -68,21 +85,25 @@ public class Output {
         String line;
 
         try {
-            BufferedReader brInt = new BufferedReader(new FileReader(fullPath + "integers.txt"));
-            BufferedReader brFloat = new BufferedReader(new FileReader(fullPath + "floats.txt"));
-            BufferedReader brString = new BufferedReader(new FileReader(fullPath + "strings.txt"));
-
-            while ((line = brInt.readLine()) != null) {
-                countInt += 1;
+            if (isIntIsCreated()) {
+                brInt = new BufferedReader(new FileReader(fullPath + "integers.txt"));
+                while ((line = brInt.readLine()) != null) {
+                    countInt += 1;
+                }
+            }
+            if (isFloatIsCreated()) {
+                brFloat = new BufferedReader(new FileReader(fullPath + "floats.txt"));
+                while ((line = brFloat.readLine()) != null) {
+                    countFloat += 1;
+                }
+            }
+            if (isStringIsCreated()) {
+                brString = new BufferedReader(new FileReader(fullPath + "strings.txt"));
+                while ((line = brString.readLine()) != null) {
+                    countString += 1;
+                }
             }
 
-            while ((line = brFloat.readLine()) != null) {
-                countFloat += 1;
-            }
-
-            while ((line = brString.readLine()) != null) {
-                countString += 1;
-            }
 
 
         } catch (FileNotFoundException e) {
@@ -98,58 +119,60 @@ public class Output {
         String line;
 
         try {
-            BufferedReader brInt = new BufferedReader(new FileReader(fullPath + "integers.txt"));
-            BufferedReader brFloat = new BufferedReader(new FileReader(fullPath + "floats.txt"));
-            BufferedReader brString = new BufferedReader(new FileReader(fullPath + "strings.txt"));
-
-            while ((line = brInt.readLine()) != null) {
-                sumInt += Long.parseLong(line);
-                if (flagInt) {
-                    if (Long.parseLong(line) < minInt) {
+            if (isIntIsCreated()) {
+                brInt = new BufferedReader(new FileReader(fullPath + "integers.txt"));
+                while ((line = brInt.readLine()) != null) {
+                    sumInt += Long.parseLong(line);
+                    if (flagInt) {
+                        if (Long.parseLong(line) < minInt) {
+                            minInt = Long.parseLong(line);
+                        } else if (Long.parseLong(line) > maxInt) {
+                            maxInt = Long.parseLong(line);
+                        }
+                    } else {
                         minInt = Long.parseLong(line);
-                    } else if (Long.parseLong(line) > maxInt) {
                         maxInt = Long.parseLong(line);
+                        flagInt = true;
                     }
-                } else {
-                    minInt = Long.parseLong(line);
-                    maxInt = Long.parseLong(line);
-                    flagInt = true;
+                    countInt += 1;
                 }
-                countInt += 1;
             }
-
-
-            while ((line = brFloat.readLine()) != null) {
-                sumFloat += Float.parseFloat(line);
-                if (flagFloat) {
-                    if (Float.parseFloat(line) < minFloat) {
+            if (isFloatIsCreated()) {
+                brFloat = new BufferedReader(new FileReader(fullPath + "floats.txt"));
+                while ((line = brFloat.readLine()) != null) {
+                    sumFloat += Float.parseFloat(line);
+                    if (flagFloat) {
+                        if (Float.parseFloat(line) < minFloat) {
+                            minFloat = Float.parseFloat(line);
+                        } else if (Float.parseFloat(line) > maxFloat) {
+                            maxFloat = Float.parseFloat(line);
+                        }
+                    } else {
                         minFloat = Float.parseFloat(line);
-                    } else if (Float.parseFloat(line) > maxFloat) {
                         maxFloat = Float.parseFloat(line);
+                        flagFloat = true;
                     }
-                } else {
-                    minFloat = Float.parseFloat(line);
-                    maxFloat = Float.parseFloat(line);
-                    flagFloat = true;
+                    countFloat += 1;
                 }
-                countFloat += 1;
             }
+            if (isStringIsCreated()) {
+                brString = new BufferedReader(new FileReader(fullPath + "strings.txt"));
+                while ((line = brString.readLine()) != null) {
 
-            while ((line = brString.readLine()) != null) {
-
-                if (flagString) {
-                    if (line.length() < minString) {
-                        minString = line.length();
-                    } else if (line.length() > maxString) {
+                    if (flagString) {
+                        if (line.length() < minString) {
+                            minString = line.length();
+                        } else if (line.length() > maxString) {
+                            maxString = line.length();
+                        }
+                    } else {
                         maxString = line.length();
+                        minString = line.length();
+                        flagString = true;
                     }
-                } else {
-                    maxString = line.length();
-                    minString = line.length();
-                    flagString = true;
-                }
 
-                countString += 1;
+                    countString += 1;
+                }
             }
 
 
@@ -187,8 +210,56 @@ public class Output {
         return flagFloat;
     }
 
+    public boolean isIntIsCreated() {
+        return IntIsCreated;
+    }
+
+    public void setIntIsCreated(boolean intIsCreated) {
+        IntIsCreated = intIsCreated;
+    }
+
+    public boolean isFloatIsCreated() {
+        return FloatIsCreated;
+    }
+
+    public void setFloatIsCreated(boolean floatIsCreated) {
+        FloatIsCreated = floatIsCreated;
+    }
+
+    public boolean isStringIsCreated() {
+        return StringIsCreated;
+    }
+
+    public void setStringIsCreated(boolean stringIsCreated) {
+        StringIsCreated = stringIsCreated;
+    }
+
     public void setFlagFloat(boolean flagFloat) {
         this.flagFloat = flagFloat;
+    }
+
+    public ArrayList<Long> getIntegers() {
+        return integers;
+    }
+
+    public void setIntegers(ArrayList<Long> integerss) {
+        this.integers = integerss;
+    }
+
+    public ArrayList<Float> getFloats() {
+        return floats;
+    }
+
+    public void setFloats(ArrayList<Float> floats) {
+        this.floats = floats;
+    }
+
+    public ArrayList<String> getStrings() {
+        return strings;
+    }
+
+    public void setStrings(ArrayList<String> strings) {
+        this.strings = strings;
     }
 
     public boolean isFlagString() {

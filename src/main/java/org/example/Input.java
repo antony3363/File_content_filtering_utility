@@ -174,6 +174,8 @@ public class Input {
         FileWriter writerFloat = null;
         FileWriter writerString = null;
 
+
+
         boolean append;
         if (App.output.isO() && App.output.isA()) {
             App.output.setFullPath(App.output.getPath() + "/" + App.output.getName());
@@ -189,14 +191,7 @@ public class Input {
             App.output.setFullPath(App.output.getName());
             append = false;
         }
-        try {
-            writerInt = new FileWriter(App.output.getFullPath() + "integers.txt", append);
-            writerFloat = new FileWriter(App.output.getFullPath() + "floats.txt", append);
-            writerString = new FileWriter(App.output.getFullPath() + "strings.txt", append);
-        } catch (IOException e) {
-            System.out.println("По данному пути (" + App.output.getFullPath() + ") не была найдена папка");
-            System.exit(0);
-        }
+
 
         BufferedReader br;
         String line;
@@ -207,26 +202,59 @@ public class Input {
                 while ((line = br.readLine()) != null) {
                     try {
                         Long.parseLong(line);
+                        if (!App.output.isIntIsCreated()) {
+                            try {
+                                writerInt = new FileWriter(App.output.getFullPath() + "integers.txt", append);
+                                App.output.setIntIsCreated(true);
+                            } catch (IOException e11) {
+                                System.out.println("По данному пути (" + App.output.getFullPath() + ") не была найдена папка");
+                                System.exit(0);
+                            }
+                        }
                         writerInt.write(line + "\n");
+
                     } catch (NumberFormatException e) {
                         try {
                             Float.parseFloat(line);
+                            if (!App.output.isFloatIsCreated()) {
+                                try {
+                                    writerFloat = new FileWriter(App.output.getFullPath() + "floats.txt", append);
+                                    App.output.setFloatIsCreated(true);
+                                } catch (IOException e12) {
+                                    System.out.println("По данному пути (" + App.output.getFullPath() + ") не была найдена папка");
+                                    System.exit(0);
+                                }
+                            }
                             writerFloat.write(line + "\n");
 
-                        } catch (NumberFormatException e2) {
+                        } catch (NumberFormatException e1) {
+                            if (!App.output.isStringIsCreated()) {
+                                try {
+                                    writerString = new FileWriter(App.output.getFullPath() + "strings.txt", append);
+                                    App.output.setStringIsCreated(true);
+                                } catch (IOException e13) {
+                                    System.out.println("По данному пути (" + App.output.getFullPath() + ") не была найдена папка");
+                                    System.exit(0);
+                                }
+                            }
                             writerString.write(line + "\n");
 
                         }
                     }
                 }
+
+
             } catch (Exception e) {
                 throw new RuntimeException(e);
             }
         }
         try {
-            writerInt.close();
-            writerFloat.close();
-            writerString.close();
+            if (App.output.isIntIsCreated())
+                writerInt.close();
+            if (App.output.isFloatIsCreated())
+                writerFloat.close();
+            if (App.output.isStringIsCreated())
+                writerString.close();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
