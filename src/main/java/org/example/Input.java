@@ -12,10 +12,8 @@ public class Input {
         String input = scan.nextLine();
         char[] chars = input.toCharArray();
         boolean flag = false;
-        //boolean flagFile = false;
-        //ArrayList<Character> charsFile = new ArrayList<Character>();
         for (int i = 0; i < chars.length; i++) {
-            //charsFile.add(chars[i]);
+
             if (!nameFile.equals("") || !(chars[i] == ' ')) {
                 nameFile += chars[i];
 
@@ -122,7 +120,7 @@ public class Input {
                             System.exit(0);
                         }
                         if (App.output.isF()) {
-                            System.out.println("Одновременная работа команд -f и -s не допустима");
+                            System.out.println("Одновременная работа команд -s и -f не допустима");
                             System.exit(0);
                         }
                         if (i + 1 == chars.length || chars[i + 1] == ' ') {
@@ -156,7 +154,7 @@ public class Input {
 
                     flag = false;
 
-                } else if (chars[i] == '-') {
+                } else if (chars[i] == '-' && nameFile.equals("-")) {
                     flag = true;
                 } else if (!nameFile.equals(" ") && chars[i] == ' ') {
                     System.out.println("Неправильное имя файла: '" + nameFile + "'");
@@ -171,27 +169,10 @@ public class Input {
     }
 
 
-    public static void readText() throws IOException { // убрать IOException
+    public static void readText(){
         FileWriter writerInt = null;
         FileWriter writerFloat = null;
         FileWriter writerString = null;
-//        if (App.output.isO() && App.output.isA()) {
-//            writerInt = new FileWriter(App.output.getPath() + "/" + App.output.getName() + "integers.txt", true);
-//            writerFloat = new FileWriter(App.output.getPath() + "/" + App.output.getName() + "floats.txt", true);
-//            writerString = new FileWriter(App.output.getPath() + "/" + App.output.getName() + "strings.txt", true);
-//        } else if(App.output.isO() && App.output.isA() == false) {
-//            writerInt = new FileWriter(App.output.getPath() + "/" + App.output.getName() + "integers.txt", false);
-//            writerFloat = new FileWriter(App.output.getPath() + "/" + App.output.getName() + "floats.txt", false);
-//            writerString = new FileWriter(App.output.getPath() + "/" + App.output.getName() + "strings.txt", false);
-//        } else if(App.output.isO() == false && App.output.isA()) {
-//            writerInt = new FileWriter(App.output.getName() + "integers.txt", true);
-//            writerFloat = new FileWriter(App.output.getName() + "floats.txt", true);
-//            writerString = new FileWriter(App.output.getName() + "strings.txt", true);
-//        } else{
-//            writerInt = new FileWriter(App.output.getName() + "integers.txt", false);
-//            writerFloat = new FileWriter(App.output.getName() + "floats.txt", false);
-//            writerString = new FileWriter(App.output.getName() + "strings.txt", false);
-//        }
 
         boolean append;
         if (App.output.isO() && App.output.isA()) {
@@ -212,7 +193,7 @@ public class Input {
             writerInt = new FileWriter(App.output.getFullPath() + "integers.txt", append);
             writerFloat = new FileWriter(App.output.getFullPath() + "floats.txt", append);
             writerString = new FileWriter(App.output.getFullPath() + "strings.txt", append);
-        } catch (FileNotFoundException e) {
+        } catch (IOException e) {
             System.out.println("По данному пути (" + App.output.getFullPath() + ") не была найдена папка");
             System.exit(0);
         }
@@ -225,73 +206,16 @@ public class Input {
                 br = new BufferedReader(file);
                 while ((line = br.readLine()) != null) {
                     try {
-                        //System.out.println("1");
-                        //Integer.parseInt(line);
                         Long.parseLong(line);
                         writerInt.write(line + "\n");
-//                        if (App.output.isF()) {
-//                            App.output.setCountInt(App.output.getCountInt() + 1);
-//                            App.output.setSumInt(App.output.getSumInt() + Integer.parseInt(line));
-//                            if (App.output.isFlagInt()) {
-//                                if (App.output.getMinInt() < Integer.parseInt(line)) {
-//                                    App.output.setMinInt(Integer.parseInt(line));
-//                                }
-//                                if (App.output.getMaxInt() > Integer.parseInt(line)) {
-//                                    App.output.setMaxInt(Integer.parseInt(line));
-//                                }
-//                            } else{
-//                                App.output.setFlagInt(true);
-//                                App.output.setMinInt(Integer.parseInt(line));
-//                                App.output.setMaxInt(Integer.parseInt(line));
-//                            }
-//                        }else if(App.output.isS()){
-//                            App.output.setCountInt(App.output.getCountInt() + 1);
-//                        }
                     } catch (NumberFormatException e) {
                         try {
-                            //System.out.println("2");
                             Float.parseFloat(line);
                             writerFloat.write(line + "\n");
 
-//                            if (App.output.isF()) {
-//                                App.output.setCountFloat(App.output.getCountFloat() + 1);
-//                                App.output.setSumFloat(App.output.getSumFloat() + Float.parseFloat(line));
-//                                if (App.output.isFlagFloat()) {
-//                                    if (App.output.getMinFloat() < Float.parseFloat(line)) {
-//                                        App.output.setMinFloat(Float.parseFloat(line));
-//                                    }
-//                                    if (App.output.getMaxFloat() > Float.parseFloat(line)) {
-//                                        App.output.setMaxFloat(Float.parseFloat(line));
-//                                    }
-//                                } else{
-//                                    App.output.setFlagFloat(true);
-//                                    App.output.setMinFloat(Float.parseFloat(line));
-//                                    App.output.setMaxFloat(Float.parseFloat(line));
-//                                }
-//                            }else if(App.output.isS()){
-//                                App.output.setCountFloat(App.output.getCountFloat() + 1);
-//                            }
-
                         } catch (NumberFormatException e2) {
-                            //System.out.println("3");
                             writerString.write(line + "\n");
 
-//                            if (App.output.isF()) {
-//                                if (App.output.isFlagString()){
-//                                    if  (App.output.getMinString() > line.length()) {
-//                                        App.output.setMinString(line.length());
-//                                    }else if (App.output.getMaxString() > line.length()) {
-//                                        App.output.setMaxString(line.length());
-//                                    }
-//                                }else{
-//                                    App.output.setFlagString(true);
-//                                    App.output.setMinString(line.length());
-//                                    App.output.setMaxString(line.length());
-//
-//                                }
-//                            }else if (App.output.isS()){
-//                                App.output.setCountString(App.output.getCountString() + 1);
-//                            }
                         }
                     }
                 }
@@ -299,9 +223,13 @@ public class Input {
                 throw new RuntimeException(e);
             }
         }
-        writerInt.close();
-        writerFloat.close();
-        writerString.close();
+        try {
+            writerInt.close();
+            writerFloat.close();
+            writerString.close();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
 
 
     }

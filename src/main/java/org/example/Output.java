@@ -7,11 +7,11 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 public class Output {
-    private boolean o = false; // указывает путь до папки +
-    private boolean p = false; // указывает префикс имен +
-    private boolean s = false; // краткая статистика
-    private boolean f = false; // полная статистика
-    private boolean a = false; //0 режим добавления +
+    private boolean o = false;
+    private boolean p = false;
+    private boolean s = false;
+    private boolean f = false;
+    private boolean a = false;
 
     private boolean flagInt = false, flagFloat = false, flagString = false;
 
