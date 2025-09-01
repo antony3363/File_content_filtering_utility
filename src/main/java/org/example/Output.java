@@ -14,7 +14,7 @@ public class Output {
     private boolean a = false;
 
     private boolean flagInt = false, flagFloat = false, flagString = false;
-    boolean IntIsCreated = false,  FloatIsCreated = false, StringIsCreated = false;
+    private boolean IntIsCreated = false,  FloatIsCreated = false, StringIsCreated = false;
 
     private int countInt = 0, countFloat = 0, countString = 0;
     private long sumInt;
